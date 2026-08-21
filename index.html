@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Massar</title>
+</head>
+<body>
+<style>
+/* Massar landing. Two themes (dark default, light via [data-mode=light]) and two languages
+   (EN default, AR via dir=rtl). Accent teal = the path; rose = risk. No em dashes. */
+:root{
+  --ground:#090d18; --panel:#10162a; --panel-2:#151d34;
+  --ink:#eaeefb; --ink-2:#c3cbe4; --muted:#8791ab;
+  --teal:#34d8c0; --teal-deep:#0f9d8c; --teal-050:rgba(52,216,192,.10);
+  --rose:#fb7185; --rose-050:rgba(251,113,133,.12);
+  --line:rgba(160,180,220,.10); --line-2:rgba(160,180,220,.18);
+  --glow1:rgba(52,216,192,.11); --glow2:rgba(90,120,255,.07);
+  --shadow:0 30px 80px rgba(0,0,0,.35);
+  --li:#0a66c2; --li-h:#0b5cad;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Code",Consolas,monospace;
+}
+:root[data-mode="light"]{
+  --ground:#f4f7fc; --panel:#ffffff; --panel-2:#eef2fa;
+  --ink:#131a2b; --ink-2:#404b66; --muted:#6a7590;
+  --teal:#0d9488; --teal-deep:#0b7d73; --teal-050:rgba(13,148,136,.10);
+  --rose:#e11d48; --rose-050:rgba(225,29,72,.10);
+  --line:rgba(20,30,60,.10); --line-2:rgba(20,30,60,.17);
+  --glow1:rgba(13,148,136,.09); --glow2:rgba(90,120,255,.06);
+  --shadow:0 22px 55px rgba(20,30,60,.12);
+}
+:root[dir="rtl"]{--serif:"Segoe UI",var(--sans)} /* serif display is Latin; Arabic uses the sans */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.65;font-size:16px;
+  -webkit-font-smoothing:antialiased;transition:background .3s,color .3s;
+  background-image:radial-gradient(1100px 520px at 82% -8%,var(--glow1),transparent 60%),
+                   radial-gradient(900px 480px at 6% 4%,var(--glow2),transparent 55%);}
+[dir="rtl"] body{background-image:radial-gradient(1100px 520px at 18% -8%,var(--glow1),transparent 60%),
+                   radial-gradient(900px 480px at 94% 4%,var(--glow2),transparent 55%);}
+.wrap{max-width:1060px;margin:0 auto;padding:0 26px}
+a{color:var(--teal);text-decoration:none}
+.mono{font-family:var(--mono)}
+h1,h2,h3{font-family:var(--serif);font-weight:600;text-wrap:balance;letter-spacing:-.01em;margin:0}
+[dir="rtl"] h1,[dir="rtl"] h2,[dir="rtl"] h3{letter-spacing:0}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--teal)}
+[dir="rtl"] .eyebrow{letter-spacing:1px}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1)}
+.reveal.in{opacity:1;transform:none}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:6px}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+/* top bar */
+.top{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:20px 26px;max-width:1060px;margin:0 auto;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:10px}
+.brand b{font-family:var(--serif);font-size:22px;font-weight:600;letter-spacing:.5px}
+.brand .ar{color:var(--muted);font-size:16px;font-family:var(--sans)}
+.top-right{display:flex;align-items:center;gap:12px}
+.top .tag{font-family:var(--mono);font-size:11.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.tgl{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--ink);background:var(--panel);
+  border:1px solid var(--line-2);border-radius:999px;padding:8px 13px;cursor:pointer;transition:border-color .15s,color .15s,background .15s;line-height:1;display:inline-flex;align-items:center;gap:6px}
+.tgl:hover{border-color:var(--teal);color:var(--teal)}
+.tgl svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8}
+.themeBtn .sun{display:none}.themeBtn .moon{display:inline-flex}
+:root[data-mode="light"] .themeBtn .sun{display:inline-flex}:root[data-mode="light"] .themeBtn .moon{display:none}
+
+/* hero */
+.hero{padding:34px 0 40px}
+.hero .eyebrow{margin-bottom:22px}
+.hero-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:36px;align-items:center}
+.hero h1{font-size:clamp(58px,12vw,128px);line-height:.92;letter-spacing:-.03em}
+[dir="rtl"] .hero h1{letter-spacing:0}
+.hero h1 .ar{display:block;font-size:.3em;color:var(--teal);letter-spacing:0;margin-top:14px;font-weight:400;font-family:var(--sans)}
+.hero .lead{font-family:var(--serif);font-size:clamp(20px,2.6vw,27px);color:var(--ink);margin:26px 0 0;max-width:22ch;line-height:1.28}
+[dir="rtl"] .hero .lead{font-family:var(--sans);font-weight:600}
+.hero .sub{font-size:17px;color:var(--ink-2);max-width:56ch;margin:20px 0 0}
+.figure{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:20px 18px 14px;box-shadow:var(--shadow)}
+.figure svg{width:100%;height:auto;display:block}
+.figure .cap{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.5px;text-align:center;margin-top:8px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.btn{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:14.5px;padding:12px 20px;border-radius:999px;cursor:pointer;border:1px solid transparent;font-family:var(--sans)}
+.btn.pri{background:var(--teal);color:#04241f}
+.btn.pri:hover{filter:brightness(1.08)}
+.btn.sec{background:transparent;color:var(--ink);border-color:var(--line-2)}
+.btn.sec:hover{border-color:var(--teal);color:var(--teal)}
+
+/* graph (theme-aware via classes) */
+.svg-graph{font-family:var(--mono)}
+.g-edge{stroke:var(--line-2);stroke-width:1.5;fill:none}
+.g-win{fill:none;stroke:var(--teal);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.g-node{fill:var(--panel);stroke:var(--teal);stroke-width:1.8}
+.g-node-dim{fill:var(--panel);stroke:var(--line-2)}
+.g-label{fill:var(--ink-2);font-size:10.5px}
+.g-label-dim{fill:var(--muted);font-size:10.5px}
+.g-risk{fill:var(--rose-050);stroke:var(--rose);stroke-width:1.8}
+.g-risk-lg{fill:var(--rose-050);stroke:var(--rose);stroke-width:2}
+.g-risk-label{fill:var(--rose);font-size:10.5px}
+
+/* sections */
+section{padding:72px 0;border-top:1px solid var(--line)}
+.sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:8px}
+.sec-head .num{font-family:var(--mono);font-size:12px;color:var(--teal);letter-spacing:1px}
+h2{font-size:clamp(28px,4vw,42px);line-height:1.08}
+.sec-sub{color:var(--ink-2);max-width:62ch;font-size:17px;margin:16px 0 0}
+.value h2{font-size:clamp(30px,5vw,52px);max-width:17ch;line-height:1.06}
+.value .big{color:var(--teal)}
+.value p{color:var(--ink-2);max-width:60ch;margin-top:22px;font-size:17px}
+
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:40px}
+.step{position:relative;padding:22px 18px 22px 0}
+[dir="rtl"] .step{padding:22px 0 22px 18px}
+.step .k{width:34px;height:34px;border-radius:50%;border:1px solid var(--teal);color:var(--teal);display:grid;place-items:center;font-family:var(--mono);font-size:13px;margin-bottom:16px;background:var(--ground);position:relative;z-index:2}
+.step::before{content:"";position:absolute;inset-inline-start:17px;inset-inline-end:-1px;top:39px;height:1px;background:linear-gradient(var(--edge-dir,90deg),var(--teal),var(--line-2));z-index:1}
+[dir="rtl"] .step::before{--edge-dir:270deg}
+.step:last-child::before{display:none}
+.step h3{font-size:19px;margin-bottom:6px}
+.step p{color:var(--muted);font-size:14px;margin:0}
+
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:40px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px 24px}
+.card .ic{width:40px;height:40px;border-radius:11px;background:var(--teal-050);display:grid;place-items:center;margin-bottom:18px}
+.card .ic svg{width:21px;height:21px;stroke:var(--teal);fill:none;stroke-width:1.7}
+.card h3{font-size:20px;margin-bottom:8px}
+.card p{color:var(--ink-2);font-size:14.5px;margin:0}
+.card .em{color:var(--rose)}
+
+.nums{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:26px}
+.stat{border-inline-start:2px solid var(--teal);padding-inline-start:18px}
+.stat .n{font-family:var(--serif);font-size:clamp(34px,5vw,52px);line-height:1;font-variant-numeric:tabular-nums}
+[dir="rtl"] .stat .n{font-family:var(--sans)}
+.stat .l{color:var(--muted);font-size:13.5px;margin-top:10px}
+.stat.risk{border-color:var(--rose)}
+
+.trail{position:relative;margin-top:44px;padding-inline-start:38px}
+.trail::before{content:"";position:absolute;inset-inline-start:11px;top:6px;bottom:6px;width:2px;background:linear-gradient(180deg,var(--teal),var(--teal-deep) 70%,transparent)}
+.stop{position:relative;padding:0 0 34px}
+.stop:last-child{padding-bottom:0}
+.stop .dot{position:absolute;inset-inline-start:-34px;top:3px;width:22px;height:22px;border-radius:50%;background:var(--ground);border:2px solid var(--teal);display:grid;place-items:center}
+.stop .dot::after{content:"";width:7px;height:7px;border-radius:50%;background:var(--teal)}
+.stop h3{font-size:19px}
+.stop p{color:var(--muted);font-size:14.5px;margin:5px 0 0;max-width:64ch}
+.stop .ph{font-family:var(--mono);font-size:11px;color:var(--teal);letter-spacing:1px;text-transform:uppercase}
+[dir="rtl"] .stop .ph{letter-spacing:0}
+
+.team-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:38px}
+.person{text-align:center;display:flex;flex-direction:column;align-items:center;padding:8px 6px}
+.mono-av{width:74px;height:74px;border-radius:50%;margin-bottom:14px;display:grid;place-items:center;font-family:var(--mono);font-size:20px;letter-spacing:1px;color:var(--teal);background:var(--panel);border:1px solid var(--line-2);box-shadow:inset 0 0 0 4px var(--teal-050)}
+.person .nm{font-weight:600;font-size:15.5px}
+.person .rl{color:var(--muted);font-size:12.5px;margin-top:2px}
+.li-btn{display:inline-flex;align-items:center;gap:8px;margin-top:15px;background:var(--li);color:#fff;font-family:var(--sans);font-weight:600;font-size:13px;line-height:1;padding:9px 15px;border-radius:999px;text-decoration:none;transition:background .15s,transform .15s,box-shadow .15s}
+.li-btn:hover,.li-btn:focus-visible{background:var(--li-h);transform:translateY(-2px);box-shadow:0 8px 20px rgba(10,102,194,.4)}
+.li-btn svg{width:16px;height:16px;fill:#fff;flex:none}
+.mentor{margin-top:34px;padding:20px 24px;background:var(--panel);border:1px solid var(--line);border-radius:14px;text-align:center}
+.mentor b{color:var(--ink)}
+.sponsors{margin-top:26px;display:flex;gap:26px;flex-wrap:wrap;justify-content:center;align-items:center;font-family:var(--mono);font-size:12.5px;letter-spacing:1px;color:var(--muted)}
+[dir="rtl"] .sponsors{font-family:var(--sans);letter-spacing:0}
+.sponsors span{white-space:nowrap}
+
+footer{border-top:1px solid var(--line);padding:44px 0 60px;color:var(--muted);font-size:13.5px}
+.foot-in{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+.foot-in .m{max-width:54ch}
+
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.g-win{stroke-dashoffset:0 !important;animation:none !important}}
+@media(max-width:860px){
+  .hero-grid{grid-template-columns:1fr;gap:30px}
+  .steps{grid-template-columns:1fr 1fr}.step::before{display:none}
+  .cards{grid-template-columns:1fr}.nums{grid-template-columns:1fr 1fr}
+  .team-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:520px){.team-grid{grid-template-columns:repeat(2,1fr)}.nums{grid-template-columns:1fr}.top .tag{display:none}}
+</style>
+
+<header class="top">
+  <div class="brand"><b>Massar</b><span class="ar">مسار</span></div>
+  <div class="top-right">
+    <span class="tag" data-i18n="tag">Attack Path Hypothesis Engine</span>
+    <button class="tgl" id="langBtn" aria-label="Switch language">العربية</button>
+    <button class="tgl themeBtn" id="themeBtn" aria-label="Toggle light and dark theme">
+      <span class="moon"><svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></span>
+      <span class="sun"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg></span>
+    </button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <section class="hero" style="border-top:none">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow" data-i18n="hero_eyebrow">KAUST Academy · Cybersecurity Capstone</div>
+        <h1>Massar<span class="ar">مسار</span></h1>
+        <p class="lead" data-i18n="hero_lead">Which exposure should we fix first, and why?</p>
+        <p class="sub" data-i18n="hero_sub">Massar turns a host scan into a ranked list of what to fix first. It maps how an attacker could chain a host's vulnerabilities into attack paths, then ranks them by likelihood times impact.</p>
+        <div class="cta">
+          <a class="btn pri" href="#how" data-i18n="cta_how">See how it works</a>
+          <a class="btn sec" href="#team" data-i18n="cta_team">Meet the team</a>
+        </div>
+      </div>
+      <div class="figure reveal">
+        <svg class="svg-graph" viewBox="0 0 560 320" role="img" aria-label="An attack graph with one route highlighted from the internet to root.">
+          <g class="g-edge">
+            <path d="M70 160 L180 160"/><path d="M180 160 L320 230"/><path d="M320 230 L440 230"/>
+            <path d="M320 90 L320 230"/><path d="M180 160 L320 90"/><path d="M320 90 L440 90"/><path d="M440 90 L500 150"/>
+          </g>
+          <path class="g-win" d="M70 160 L180 160 L320 90 L440 90 L500 150"
+                style="stroke-dasharray:640;stroke-dashoffset:640;animation:draw 1.9s cubic-bezier(.4,0,.2,1) .35s forwards"/>
+          <g>
+            <circle class="g-node-dim" cx="320" cy="230" r="8"/>
+            <text class="g-label-dim" x="320" y="252" text-anchor="middle">ftp:21</text>
+            <circle class="g-node-dim" cx="440" cy="230" r="7"/>
+          </g>
+          <g>
+            <circle class="g-node" cx="70"  cy="160" r="9"/>  <text class="g-label" x="70"  y="184" text-anchor="middle">internet</text>
+            <circle class="g-node" cx="180" cy="160" r="11"/> <text class="g-label" x="180" y="186" text-anchor="middle">host</text>
+            <circle class="g-node" cx="320" cy="90"  r="10"/> <text class="g-label" x="320" y="70"  text-anchor="middle">http:80</text>
+            <circle class="g-risk" cx="440" cy="90"  r="9"/>  <text class="g-risk-label" x="440" y="70" text-anchor="middle">CVE</text>
+            <circle class="g-risk-lg" cx="500" cy="150" r="13"/>
+            <text class="g-risk-label" x="500" y="150" text-anchor="middle" dominant-baseline="central" font-weight="700">root</text>
+          </g>
+        </svg>
+        <div class="cap" data-i18n="fig_cap">rank 1 · one route of many, scored and explained</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUE -->
+  <section class="value reveal">
+    <div class="eyebrow" data-i18n="prob_eyebrow">The problem</div>
+    <h2 style="margin-top:14px" data-i18n="prob_h">Hundreds of findings become <span class="big">a handful of decisions.</span></h2>
+    <p data-i18n="prob_p">A single host can return hundreds of vulnerabilities. A list sorted by severity tells you which are scary, not which are reachable, or which one fix removes the most risk. Massar answers the question a defender actually has: what do I fix first, and how sure are you.</p>
+  </section>
+
+  <!-- HOW -->
+  <section id="how" class="reveal">
+    <div class="sec-head"><span class="num">01</span><div class="eyebrow" style="align-self:center" data-i18n="how_eyebrow">How a run works</div></div>
+    <h2 data-i18n="how_h">From a scan to a plan, in five steps.</h2>
+    <div class="steps">
+      <div class="step"><div class="k">1</div><h3 data-i18n="s1_t">Scan</h3><p data-i18n="s1_p">nmap finds the open ports and the software behind them.</p></div>
+      <div class="step"><div class="k">2</div><h3 data-i18n="s2_t">Identify</h3><p data-i18n="s2_p">each service gets a standard software id, a CPE.</p></div>
+      <div class="step"><div class="k">3</div><h3 data-i18n="s3_t">Look up</h3><p data-i18n="s3_p">NVD and CISA supply its known vulnerabilities.</p></div>
+      <div class="step"><div class="k">4</div><h3 data-i18n="s4_t">Connect</h3><p data-i18n="s4_p">what each weakness grants becomes a map of routes.</p></div>
+      <div class="step"><div class="k">5</div><h3 data-i18n="s5_t">Rank</h3><p data-i18n="s5_p">each route is scored: how likely, times how bad.</p></div>
+    </div>
+  </section>
+
+  <!-- DIFFERENT -->
+  <section class="reveal">
+    <div class="sec-head"><span class="num">02</span><div class="eyebrow" style="align-self:center" data-i18n="diff_eyebrow">Why it is different</div></div>
+    <h2 data-i18n="diff_h">Prioritisation you can trust, and check.</h2>
+    <div class="cards">
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2"/><circle cx="19" cy="12" r="2"/><circle cx="7" cy="19" r="2"/><path d="M7 6h6l4 6-4 6"/></svg></div>
+        <h3 data-i18n="c1_t">Outcome, not just severity</h3>
+        <p data-i18n="c1_p">Massar scores where an attacker ends up. A longer route that reaches <span class="em">root</span> can outrank a scarier single finding that goes nowhere.</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7-7 9-4-2-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h3 data-i18n="c2_t">Honest on screen</h3>
+        <p data-i18n="c2_p">Everything shown is a hypothesis, never a confirmed break in. Every link says how we know it: observed, measured, derived or assumed. Every score shows its own arithmetic.</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M9 9h6v6H9z"/></svg></div>
+        <h3 data-i18n="c3_t">AI that explains, never decides</h3>
+        <p data-i18n="c3_p">The model judges how plausible each route looks and writes the plain language why. Delete every AI verdict and the ranking is unchanged, a test proves it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- NUMBERS -->
+  <section class="reveal">
+    <div class="eyebrow" data-i18n="num_eyebrow">By the numbers</div>
+    <div class="nums">
+      <div class="stat"><div class="n" data-i18n="n1">Real</div><div class="l" data-i18n="n1l">validated on a live machine, not a fixture</div></div>
+      <div class="stat"><div class="n">259</div><div class="l" data-i18n="n2l">findings ranked in about 9 seconds</div></div>
+      <div class="stat risk"><div class="n">56 / 70</div><div class="l" data-i18n="n3l">attack paths one fix can remove</div></div>
+      <div class="stat"><div class="n">0</div><div class="l" data-i18n="n4l">exploits fired, it hypothesises, never attacks</div></div>
+    </div>
+  </section>
+
+  <!-- JOURNEY -->
+  <section class="reveal">
+    <div class="sec-head"><span class="num">03</span><div class="eyebrow" style="align-self:center" data-i18n="jrn_eyebrow">The path we took</div></div>
+    <h2 data-i18n="jrn_h">How Massar grew, one rung at a time.</h2>
+    <p class="sec-sub" data-i18n="jrn_sub">A capstone measured in working software. Each step made the last one real.</p>
+    <div class="trail">
+      <div class="stop"><span class="dot"></span><div class="ph" data-i18n="j1_ph">Foundation</div><h3 data-i18n="j1_t">A walking skeleton</h3><p data-i18n="j1_p">One thin slice running end to end on sample data, every stage a real function, so the seams were proven before the depth went in.</p></div>
+      <div class="stop"><span class="dot"></span><div class="ph" data-i18n="j2_ph">Intelligence</div><h3 data-i18n="j2_t">Real vulnerability intel</h3><p data-i18n="j2_p">Live NVD and CISA KEV, matched by version range rather than exact strings, so a scanned service meets its actual CVEs.</p></div>
+      <div class="stop"><span class="dot"></span><div class="ph" data-i18n="j3_ph">Reasoning</div><h3 data-i18n="j3_t">The engine core</h3><p data-i18n="j3_p">Deterministic chaining by privilege: a step is added only when one weakness grants what the next one needs. The ranking became explainable arithmetic.</p></div>
+      <div class="stop"><span class="dot"></span><div class="ph" data-i18n="j4_ph">Proof</div><h3 data-i18n="j4_t">The first real machine</h3><p data-i18n="j4_p">A live Metasploitable host, hundreds of findings turned into a ranked, grouped worklist in seconds. The tool stopped being a demo.</p></div>
+      <div class="stop"><span class="dot"></span><div class="ph" data-i18n="j5_ph">Language</div><h3 data-i18n="j5_t">The AI layer</h3><p data-i18n="j5_p">A model that judges plausibility and writes the explanation, wired in so it can never invent a route or move one up the list.</p></div>
+      <div class="stop"><span class="dot"></span><div class="ph" data-i18n="j6_ph">Trust</div><h3 data-i18n="j6_t">Honest by design</h3><p data-i18n="j6_p">Provenance on every link, a coverage line so an empty result never reads as safe, and every score opening to show its own math.</p></div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section id="team" class="reveal">
+    <div class="sec-head"><span class="num">04</span><div class="eyebrow" style="align-self:center" data-i18n="team_eyebrow">The team</div></div>
+    <h2 data-i18n="team_h">Five students, one engine.</h2>
+    <div class="team-grid">
+      <div class="person"><div class="mono-av">NA</div><div class="nm" data-i18n="p_naif">Naif</div><div class="rl" data-i18n="role_lead">Team lead</div><a class="li-btn" href="https://www.linkedin.com/in/n4if/" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.64h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1V21H21.2v-5.4c0-1.29-.03-2.94-1.8-2.94-1.8 0-2.08 1.4-2.08 2.85V21H13.6z"/></svg>LinkedIn</a></div>
+      <div class="person"><div class="mono-av">NW</div><div class="nm" data-i18n="p_nawaf">Nawaf</div><div class="rl" data-i18n="role_eng">Engineer</div><a class="li-btn" href="https://www.linkedin.com/in/nawafalsahabi/" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.64h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1V21H21.2v-5.4c0-1.29-.03-2.94-1.8-2.94-1.8 0-2.08 1.4-2.08 2.85V21H13.6z"/></svg>LinkedIn</a></div>
+      <div class="person"><div class="mono-av">OS</div><div class="nm" data-i18n="p_osama">Osama</div><div class="rl" data-i18n="role_eng2">Engineer</div><a class="li-btn" href="https://www.linkedin.com/in/osama-aldhayan-73b518291/" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.64h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1V21H21.2v-5.4c0-1.29-.03-2.94-1.8-2.94-1.8 0-2.08 1.4-2.08 2.85V21H13.6z"/></svg>LinkedIn</a></div>
+      <div class="person"><div class="mono-av">AZ</div><div class="nm" data-i18n="p_azzam">Azzam</div><div class="rl" data-i18n="role_eng3">Engineer</div><a class="li-btn" href="https://www.linkedin.com/in/azam-a-alburiki-8a94713b3/" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.64h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1V21H21.2v-5.4c0-1.29-.03-2.94-1.8-2.94-1.8 0-2.08 1.4-2.08 2.85V21H13.6z"/></svg>LinkedIn</a></div>
+      <div class="person"><div class="mono-av">AB</div><div class="nm" data-i18n="p_abdallah">Abdallah</div><div class="rl" data-i18n="role_eng4">Engineer</div><a class="li-btn" href="https://www.linkedin.com/in/abdullah-abonadi-694532336/" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.64h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1V21H21.2v-5.4c0-1.29-.03-2.94-1.8-2.94-1.8 0-2.08 1.4-2.08 2.85V21H13.6z"/></svg>LinkedIn</a></div>
+    </div>
+    <div class="mentor" data-i18n="mentor">Academic sign off by <b>Prof. Mudassar Aslam</b></div>
+    <div class="sponsors" data-i18n="sponsors"><span>NCA</span><span>KAUST</span><span>KAUST Academy</span><span>SITE</span></div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="reveal">
+    <div class="sec-head"><span class="num">05</span><div class="eyebrow" style="align-self:center" data-i18n="con_eyebrow">Contact</div></div>
+    <h2 data-i18n="con_h">Talk to the team.</h2>
+    <p class="sec-sub" data-i18n="con_p">Questions, a demo, or a collaboration? Reach us by email.</p>
+    <a class="btn pri" href="mailto:contact@masarproject.com" style="margin-top:24px">
+      <svg viewBox="0 0 24 24" style="width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>
+      contact@masarproject.com
+    </a>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap foot-in">
+    <div class="brand"><b>Massar</b><span class="ar">مسار</span></div>
+    <div class="m" data-i18n="foot">A KAUST Academy cybersecurity capstone. Defensive by design: Massar hypothesises and prioritises, it never exploits. Everything on screen is a hypothesis, and every number is computed.</div>
+  </div>
+</footer>
+
+<script>
+const STR={
+ en:{}, // English lives in the HTML as-is; toggling to en restores it
+ ar:{
+  tag:"محرّك فرضيات مسارات الهجوم",
+  hero_eyebrow:"أكاديمية كاوست · مشروع تخرّج الأمن السيبراني",
+  hero_lead:"أيّ ثغرة نُعالجها أولاً، ولماذا؟",
+  hero_sub:"يحوّل «مسار» فحص المضيف إلى قائمة مرتّبة بما يجب إصلاحه أولاً: يرسم كيف يمكن لمهاجم أن يربط ثغرات المضيف في مسارات هجوم، ثم يرتّبها حسب الاحتمال في الأثر.",
+  cta_how:"شاهد كيف يعمل", cta_team:"تعرّف على الفريق",
+  fig_cap:"المرتبة ١ · مسار واحد من عدّة، مُقيَّم ومُفسَّر",
+  prob_eyebrow:"المشكلة",
+  prob_h:'مئات النتائج تصبح <span class="big">قرارات معدودة.</span>',
+  prob_p:"قد يُعيد مضيف واحد مئات الثغرات. القائمة المرتّبة حسب الخطورة تُخبرك أيّها مُخيف، لا أيّها قابل للوصول، ولا أيّ إصلاح يُزيل أكبر قدر من الخطر. يُجيب «مسار» عن السؤال الحقيقي للمدافع: ما الذي أُصلحه أولاً، وما مدى ثقتك؟",
+  how_eyebrow:"كيف تجري العملية", how_h:"من فحص إلى خطة، في خمس خطوات.",
+  s1_t:"فحص", s1_p:"يكتشف nmap المنافذ المفتوحة والبرمجيات خلفها.",
+  s2_t:"تعريف", s2_p:"كل خدمة تحصل على معرّف برمجي قياسي (CPE).",
+  s3_t:"بحث", s3_p:"تُزوّدنا NVD وCISA بثغراتها المعروفة.",
+  s4_t:"ربط", s4_p:"ما تمنحه كل ثغرة يصبح خريطة مسارات.",
+  s5_t:"ترتيب", s5_p:"يُقيَّم كل مسار: مدى الاحتمال × مدى الضرر.",
+  diff_eyebrow:"لماذا يختلف", diff_h:"ترتيب أولويات تثق به، وتتحقّق منه.",
+  c1_t:"النتيجة، لا الخطورة وحدها", c1_p:'يُقيّم «مسار» إلى أين يصل المهاجم. مسار أطول يبلغ <span class="em">الجذر (root)</span> قد يتفوّق على ثغرة مفردة أكثر رعباً لكنها لا تقود إلى شيء.',
+  c2_t:"صدق على الشاشة", c2_p:"كل ما يُعرض فرضية، لا اختراق مؤكَّد. كل رابط يوضّح مصدره: مُلاحَظ، مُقاس، مُشتَق أو مُفترَض. وكل نتيجة تُظهر حسابها.",
+  c3_t:"ذكاء يشرح، ولا يقرّر", c3_p:"يحكم النموذج على مدى معقولية كل مسار ويكتب الشرح بلغة واضحة. احذف كل أحكام الذكاء ويبقى الترتيب كما هو، ويُثبت ذلك اختبار.",
+  num_eyebrow:"بالأرقام",
+  n1:"حقيقي", n1l:"تم التحقق على جهاز حيّ، لا بيانات مُعدّة",
+  n2l:"نتيجة رُتّبت في نحو ٩ ثوانٍ", n3l:"مسار هجوم يُزيلها إصلاح واحد", n4l:"استغلال يُطلَق، يفترض ولا يهاجم",
+  jrn_eyebrow:"المسار الذي سلكناه", jrn_h:"كيف نما «مسار»، خطوة بخطوة.", jrn_sub:"مشروع تخرّج يُقاس ببرمجيات تعمل. كل خطوة جعلت التي قبلها حقيقية.",
+  j1_ph:"الأساس", j1_t:"هيكل يمشي", j1_p:"شريحة رفيعة تعمل من البداية إلى النهاية على بيانات عيّنة، كل مرحلة دالة حقيقية، لإثبات المفاصل قبل إضافة العمق.",
+  j2_ph:"معلومات", j2_t:"معلومات ثغرات حقيقية", j2_p:"بيانات NVD وCISA KEV حيّة، تُطابَق حسب نطاق الإصدار لا النص الحرفي، لتلتقي الخدمة المفحوصة بثغراتها الفعلية.",
+  j3_ph:"استدلال", j3_t:"نواة المحرّك", j3_p:"ربط حتمي حسب الصلاحية: تُضاف خطوة فقط حين تمنح ثغرة ما تحتاجه التالية. صار الترتيب حساباً قابلاً للشرح.",
+  j4_ph:"برهان", j4_t:"أول جهاز حقيقي", j4_p:"مضيف Metasploitable حيّ: مئات النتائج تحوّلت إلى قائمة عمل مرتّبة ومجمّعة في ثوانٍ. لم تعد الأداة مجرد عرض.",
+  j5_ph:"لغة", j5_t:"طبقة الذكاء", j5_p:"نموذج يحكم على المعقولية ويكتب الشرح، مربوط بحيث لا يخترع مساراً ولا يرفع مرتبته أبداً.",
+  j6_ph:"ثقة", j6_t:"صادق بالتصميم", j6_p:"مصدر لكل رابط، وسطر تغطية كي لا تُقرأ نتيجة فارغة على أنها أمان، وكل نتيجة تنفتح لتُظهر حسابها.",
+  team_eyebrow:"الفريق", team_h:"خمسة طلاب، محرّك واحد.",
+  role_lead:"قائد الفريق", role_eng:"مهندس", role_eng2:"مهندس", role_eng3:"مهندس", role_eng4:"مهندس",
+  p_naif:"نايف", p_nawaf:"نواف", p_osama:"أسامة", p_azzam:"عزام", p_abdallah:"عبدالله",
+  mentor:"إشراف أكاديمي: <b>أ.د. مدثر أسلم</b>",
+  con_eyebrow:"تواصل", con_h:"تواصل مع الفريق.", con_p:"لديك سؤال، أو ترغب بعرض توضيحي أو تعاون؟ راسلنا عبر البريد.",
+  sponsors:'<span>NCA</span><span>جامعة الملك عبدالله (KAUST)</span><span>أكاديمية كاوست</span><span>SITE</span>',
+  foot:"مشروع تخرّج في الأمن السيبراني من أكاديمية كاوست. دفاعيّ بالتصميم: «مسار» يفترض ويرتّب الأولويات، ولا يستغل أبداً. كل ما على الشاشة فرضية، وكل رقم محسوب."
+ }
+};
+// snapshot the English HTML so we can restore it
+document.querySelectorAll("[data-i18n]").forEach(el=>{ STR.en[el.dataset.i18n]=el.innerHTML; });
+const root=document.documentElement, langBtn=document.getElementById("langBtn"), themeBtn=document.getElementById("themeBtn");
+function setLang(l){
+  root.lang=l; root.dir = l==="ar" ? "rtl":"ltr";
+  document.querySelectorAll("[data-i18n]").forEach(el=>{ const v=STR[l][el.dataset.i18n]; if(v!=null) el.innerHTML=v; });
+  langBtn.textContent = l==="ar" ? "English" : "العربية";
+  try{localStorage.setItem("massar_lang",l);}catch(e){}
+}
+function setMode(m){ root.dataset.mode=m; try{localStorage.setItem("massar_mode",m);}catch(e){} }
+langBtn.addEventListener("click",()=>setLang(root.dir==="rtl"?"en":"ar"));
+themeBtn.addEventListener("click",()=>setMode(root.dataset.mode==="light"?"dark":"light"));
+// restore saved prefs
+try{
+  const sm=localStorage.getItem("massar_mode"); if(sm) setMode(sm);
+  const sl=localStorage.getItem("massar_lang"); if(sl==="ar") setLang("ar");
+}catch(e){}
+// reveal on scroll
+try{
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}})},{threshold:.12});
+  document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+}catch(e){document.querySelectorAll(".reveal").forEach(el=>el.classList.add("in"));}
+</script>
+</body>
+</html>
